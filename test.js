@@ -66,8 +66,7 @@ it('should parse a statement without an author:', function () {
     prefix: 'Copyright',
     symbol: '(C)',
     dateRange: '1986-1993, 1998, 2004, 2007-2010',
-    latest: '2010',
-    author: ''
+    latest: '2010'
   }]);
 });
 
