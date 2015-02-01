@@ -10,29 +10,90 @@
 var assert = require('assert');
 var parse = require('./');
 
-console.log(parse('//   assert.equal(match("Copyright (c) 2013, Jon Schlinkert.")[0], "2013-2015");'))
-
 it('should parse a copyright statement:', function () {
-  var parsed = parse('abc\nCopyright (c) 2013, Jon Schlinkert.\nxyz');
-  assert.deepEqual(parsed.statement, 'Copyright (c) 2013, Jon Schlinkert');
-  assert.deepEqual(parsed.prefix, 'Copyright');
-  assert.deepEqual(parsed.symbol, '(c)');
-  assert.deepEqual(parsed.dateRange, ['2013']);
-  assert.deepEqual(parsed.latest, '2013');
-  assert.deepEqual(parsed.author, 'Jon Schlinkert');
+  var parsed = parse('abc\nCopyright (c) 2015, Jon Schlinkert.\nxyz');
+  assert.deepEqual(parsed, [{
+    statement: 'Copyright (c) 2015, Jon Schlinkert',
+    prefix: 'Copyright',
+    symbol: '(c)',
+    dateRange: ['2015'],
+    latest: '2015',
+    author: 'Jon Schlinkert'
+  }]);
 });
 
-it('should parse a copyright statement:', function () {
-  var parsed = parse('abc\nCopyright (c) 2013-2015, Jon Schlinkert.\nxyz');
-  assert.deepEqual(parsed.statement, 'Copyright (c) 2013-2015, Jon Schlinkert');
-  assert.deepEqual(parsed.prefix, 'Copyright');
-  assert.deepEqual(parsed.symbol, '(c)');
-  assert.deepEqual(parsed.dateRange, ['2013', '2015']);
-  assert.deepEqual(parsed.latest, '2015');
-  assert.deepEqual(parsed.author, 'Jon Schlinkert');
+it('should parse multiple copyright statements:', function () {
+  var parsed = parse('abc\nCopyright (c) 2013, Jon Schlinkert.\nxyz\nabc\nCopyright (c) 2015, Jon Schlinkert.\nxyz');
+  assert.deepEqual(parsed, [{
+    statement: 'Copyright (c) 2013, Jon Schlinkert',
+    prefix: 'Copyright',
+    symbol: '(c)',
+    dateRange: ['2013'],
+    latest: '2013',
+    author: 'Jon Schlinkert'
+  }, {
+    statement: 'Copyright (c) 2015, Jon Schlinkert',
+    prefix: 'Copyright',
+    symbol: '(c)',
+    dateRange: ['2015'],
+    latest: '2015',
+    author: 'Jon Schlinkert'
+  }]);
 });
 
-it('should return `null` when no valid copyright statement is found:', function () {
-  assert.equal(parse('//   assert.equal(match("Copyright (c) 2013, Jon Schlinkert.")[0], "2013-2015");'), null);
-  assert.equal(parse('foo'), null);
+it('should parse a range of years:', function () {
+  assert.deepEqual(parse('abc\nCopyright (c) 2013-2015, Jon Schlinkert.\nxyz'), [{
+    statement: 'Copyright (c) 2013-2015, Jon Schlinkert',
+    prefix: 'Copyright',
+    symbol: '(c)',
+    dateRange: ['2013', '2015'],
+    latest: '2015',
+    author: 'Jon Schlinkert'
+  }]);
+  assert.deepEqual(parse('#     Copyright (C) 1986-1993, 1998, 2004, 2007-2010 Some Guy'), [{
+    statement: 'Copyright (C) 1986-1993, 1998, 2004, 2007-2010 Some Guy',
+    prefix: 'Copyright',
+    symbol: '(C)',
+    dateRange: ['1986', '1993', '1998', '2004', '2007', '2010'],
+    latest: '2010',
+    author: 'Some Guy'
+  }]);
+});
+
+it('should parse a statement without an author:', function () {
+  assert.deepEqual(parse('#     Copyright (C) 1986-1993, 1998, 2004, 2007-2010'), [{
+    statement: 'Copyright (C) 1986-1993, 1998, 2004, 2007-2010',
+    prefix: 'Copyright',
+    symbol: '(C)',
+    dateRange: ['1986', '1993', '1998', '2004', '2007', '2010'],
+    latest: '2010',
+    author: ''
+  }]);
+});
+
+it('should remove non-copyright material:', function () {
+  assert.deepEqual(parse('." Copyright (c) 2011, Joyent, Inc.  All Rights Reserved.'), [{
+    statement: 'Copyright (c) 2011, Joyent, Inc',
+    prefix: 'Copyright',
+    symbol: '(c)',
+    dateRange: ['2011'],
+    latest: '2011',
+    author: 'Joyent, Inc'
+  }]);
+});
+
+it('should parse complex statements:', function () {
+  assert.deepEqual(parse('/* Copyright (C) 1999 Masanao Izumo <iz@onicos.co.jp>'), [{
+    statement: 'Copyright (C) 1999 Masanao Izumo ',
+    prefix: 'Copyright',
+    symbol: '(C)',
+    dateRange: ['1999'],
+    latest: '1999',
+    author: 'Masanao Izumo'
+  }]);
+});
+
+it('should return an empty array when no valid copyright statement is found:', function () {
+  assert.deepEqual(parse('//   assert.equal(match("Copyright (c) 2013, Jon Schlinkert.")[0], "2013-2015");'), []);
+  assert.deepEqual(parse('foo'), []);
 });
