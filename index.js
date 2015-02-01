@@ -9,24 +9,57 @@
 
 var regex = require('copyright-regex');
 
-module.exports = function (str) {
-  return parse(str);
+module.exports = function (str, options) {
+  var res = [];
+  var match;
+
+  while (match = parse(str, options)) {
+    str = str.replace(match.statement, '');
+    res.push(match);
+  }
+
+  return res;
 };
 
-function parse(str) {
+function parse(str, options) {
   var match = regex().exec(str);
   if (!match) { return null; }
-  var res = {};
 
-  res.statement = match[0] // 'Copyright (c) 2013-2015, 2016, Jon Schlinkert'
-  res.prefix    = match[1] // 'Copyright'
-  res.symbol    = match[2] // '(c)'
-  res.dateRange = parseRange(match[3]) // '2013-2015, 2016, '
-  res.latest    = match[4] // '2016'
-  res.author    = match[5] // 'Jon Schlinkert'
+  if (!isValid(match[0])) {
+    return null;
+  }
+
+  if (options && options.original) {
+    res.original = str;
+  }
+
+  var res = {};
+  // 'Copyright (c) 2013-2015, 2016, Jon Schlinkert'
+  res.statement = match[0];
+  // 'Copyright'
+  res.prefix = match[1];
+  // '(c)'
+  res.symbol = match[2];
+  // '2013-2015, 2016, '
+  res.dateRange = parseRange(match[3]);
+  // '2016'
+  res.latest = match[4];
+  // 'Jon Schlinkert'
+  res.author = clean(match[5]);
   return res;
 }
 
 function parseRange(str) {
   return str.split(/\D/).filter(Boolean);
+}
+
+function clean(str) {
+  return str.replace(/^[\W\s]*|[\W\s]*$/g, '');
+}
+
+function isValid(str) {
+  if (!/(?:(?:19|20)[0-9]{2})/.test(str)) {
+    return false;
+  }
+  return true;
 }
