@@ -46,7 +46,6 @@ function parse(str, options) {
   if (match[4]) { res.latest = match[4]; }
   // 'Jon Schlinkert'
   if (match[5]) { res.author = clean(match[5]); }
-  console.log(res)
   return res;
 }
 
