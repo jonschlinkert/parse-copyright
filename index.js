@@ -41,7 +41,7 @@ function parse(str, options) {
   // '(c)'
   res.symbol = match[2];
   // '2013-2015, 2016, '
-  res.dateRange = parseRange(match[3]);
+  res.dateRange = clean(match[3]);
   // '2016'
   res.latest = match[4];
   // 'Jon Schlinkert'
@@ -49,12 +49,8 @@ function parse(str, options) {
   return res;
 }
 
-function parseRange(str) {
-  return str.split(/\D/).filter(Boolean);
-}
-
 function clean(str) {
-  return str.replace(/^[\W\s]*|[\W\s]*$/g, '');
+  return str.replace(/^\W*|\W*$/g, '');
 }
 
 function isValid(str) {

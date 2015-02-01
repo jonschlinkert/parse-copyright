@@ -16,7 +16,7 @@ it('should parse a copyright statement:', function () {
     statement: 'Copyright (c) 2015, Jon Schlinkert',
     prefix: 'Copyright',
     symbol: '(c)',
-    dateRange: ['2015'],
+    dateRange: '2015',
     latest: '2015',
     author: 'Jon Schlinkert'
   }]);
@@ -28,14 +28,14 @@ it('should parse multiple copyright statements:', function () {
     statement: 'Copyright (c) 2013, Jon Schlinkert',
     prefix: 'Copyright',
     symbol: '(c)',
-    dateRange: ['2013'],
+    dateRange: '2013',
     latest: '2013',
     author: 'Jon Schlinkert'
   }, {
     statement: 'Copyright (c) 2015, Jon Schlinkert',
     prefix: 'Copyright',
     symbol: '(c)',
-    dateRange: ['2015'],
+    dateRange: '2015',
     latest: '2015',
     author: 'Jon Schlinkert'
   }]);
@@ -46,7 +46,7 @@ it('should parse a range of years:', function () {
     statement: 'Copyright (c) 2013-2015, Jon Schlinkert',
     prefix: 'Copyright',
     symbol: '(c)',
-    dateRange: ['2013', '2015'],
+    dateRange: '2013-2015',
     latest: '2015',
     author: 'Jon Schlinkert'
   }]);
@@ -54,7 +54,7 @@ it('should parse a range of years:', function () {
     statement: 'Copyright (C) 1986-1993, 1998, 2004, 2007-2010 Some Guy',
     prefix: 'Copyright',
     symbol: '(C)',
-    dateRange: ['1986', '1993', '1998', '2004', '2007', '2010'],
+    dateRange: '1986-1993, 1998, 2004, 2007-2010',
     latest: '2010',
     author: 'Some Guy'
   }]);
@@ -65,7 +65,7 @@ it('should parse a statement without an author:', function () {
     statement: 'Copyright (C) 1986-1993, 1998, 2004, 2007-2010',
     prefix: 'Copyright',
     symbol: '(C)',
-    dateRange: ['1986', '1993', '1998', '2004', '2007', '2010'],
+    dateRange: '1986-1993, 1998, 2004, 2007-2010',
     latest: '2010',
     author: ''
   }]);
@@ -76,7 +76,7 @@ it('should remove non-copyright material:', function () {
     statement: 'Copyright (c) 2011, Joyent, Inc',
     prefix: 'Copyright',
     symbol: '(c)',
-    dateRange: ['2011'],
+    dateRange: '2011',
     latest: '2011',
     author: 'Joyent, Inc'
   }]);
@@ -87,7 +87,7 @@ it('should parse complex statements:', function () {
     statement: 'Copyright (C) 1999 Masanao Izumo ',
     prefix: 'Copyright',
     symbol: '(C)',
-    dateRange: ['1999'],
+    dateRange: '1999',
     latest: '1999',
     author: 'Masanao Izumo'
   }]);
