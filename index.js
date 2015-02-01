@@ -35,17 +35,18 @@ function parse(str, options) {
 
   var res = {};
   // 'Copyright (c) 2013-2015, 2016, Jon Schlinkert'
-  res.statement = match[0];
+  if (match[0]) { res.statement = match[0]; }
   // 'Copyright'
-  res.prefix = match[1];
+  if (match[1]) { res.prefix = match[1]; }
   // '(c)'
-  res.symbol = match[2];
+  if (match[2]) { res.symbol = match[2]; }
   // '2013-2015, 2016, '
-  res.dateRange = clean(match[3]);
+  if (match[3]) { res.dateRange = clean(match[3]); }
   // '2016'
-  res.latest = match[4];
+  if (match[4]) { res.latest = match[4]; }
   // 'Jon Schlinkert'
-  res.author = clean(match[5]);
+  if (match[5]) { res.author = clean(match[5]); }
+  console.log(res)
   return res;
 }
 
