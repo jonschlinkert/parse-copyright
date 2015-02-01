@@ -23,7 +23,7 @@ Returns an array of copyright objects:
   statement: 'Copyright (c) 2013-2015, Jon Schlinkert',
   prefix: 'Copyright',
   symbol: '(c)',
-  dateRange: ['2013', '2015'],
+  dateRange: '2013, 2015',
   latest: '2015',
   author: 'Jon Schlinkert'
 }]
